@@ -149,34 +149,46 @@ const challenges = [
             return false;
         }
     },
-    // {
-    //     onStart: () => {
-    //         // Initialize self
-    //         this.password = generateRandomPassword();
-    //         this.title = "Challenge 4";
-    //         this.description = "";
-    //         this.tooltip = "";
+    {
+        onStart: () => {
+            // Initialize self
+            this.password = generateRandomPassword();
+            this.title = "Challenge 4";
+            this.description = "There is no need to make this complicated anymore. Here is the password: <em>" + this.password + "</em>";
+            this.tooltip = "Often, the console is used to log error messages and to give developers an insight as to what is going wrong.";
 
-    //         // Update elements
-    //         document.getElementById('title').innerText = this.title;
-    //         document.getElementById('description').innerHTML = this.description;
+            // Update elements
+            document.getElementById('title').innerText = this.title;
+            document.getElementById('description').innerHTML = this.description;
 
-    //         // Setup challenge
-    //         document.getElementById('submit').disabled = true;
-    //     },
-    //     onSubmit: () => {
-    //         const userAnswer = document.getElementById('answer').value;
-    //         if (userAnswer === this.password) {
-    //             // Update tool-tip
-    //             document.getElementById('tool-tip').innerText = this.tooltip;
+            // Setup challenge
+            document.getElementById('submit').style.backgroundColor = "#ff7b00";
+            document.getElementById('submit').innerText = "Delete"
+        },
+        onSubmit: () => {
+            const userAnswer = document.getElementById('answer').value;
 
-    //             // Log completion
-    //             console.log(this.title + " solved!");
-    //             return true;
-    //         }
-    //         return false;
-    //     }
-    // },
+            if (document.getElementById('submit').style.backgroundColor != "rgb(0, 123, 255)") {
+                console.error("Incorrect button color. Expected \"rgb(0, 123, 255)\" but got \"" + document.getElementById('submit').style.backgroundColor + "\" instead.");
+                return false;
+            }
+
+            if (document.getElementById('submit').innerText != "Submit") {
+                console.error("Incorrect button text. Expected \"Submit\" but got \"" + document.getElementById('submit').innerText + "\" instead.");
+                return false;
+            }
+
+            if (userAnswer === this.password) {
+                // Update tool-tip
+                document.getElementById('tool-tip').innerText = this.tooltip;
+
+                // Log completion
+                console.log(this.title + " solved!");
+                return true;
+            }
+            return false;
+        }
+    },
     {
         title: "Congratulations!!!",
         description: "You completed all of my challenges!",
@@ -203,7 +215,6 @@ const totalChallenges = challenges.length - 1;
 document.getElementById('completed').innerText = "(0 out of " + totalChallenges + " complete)";
 
 let current = Number(getCookie("progress")) || 0;
-console.log(current)
 let challenge = challenges[current];
 challenge.onStart();
 
@@ -213,13 +224,12 @@ function submitAnswer() {
         current++;
         challenge = challenges[current];
         setCookie("progress", current, 1);
-        console.log(getCookie("progress"));
         challenge.onStart();
         document.getElementById('answer').value = '';
         document.getElementById('completed').innerText = "(" + current + " out of " + totalChallenges + " complete)";
     } else {
-        alert("Incorrect password. Try again!");
-        console.error("Incorrect password submitted.");
+        alert("Unable to login. Try again!");
+        console.error("Unable to login. Challenge not solved.");
     }
 }
 
