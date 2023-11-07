@@ -274,13 +274,14 @@ function randomColor() {
 }
 
 function setCookie(name,value,days) {
+    var domain = location.host
     var expires = "";
     if (days) {
         var date = new Date();
         date.setTime(date.getDate() + days);
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/; domain=" + domain + ";";
 }
 
 function getCookie(name) {
