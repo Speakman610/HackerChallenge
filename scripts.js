@@ -74,11 +74,12 @@ const challenges = [
             this.password = generateRandomPassword();
             this.title = "Challenge 1";
             this.description = "This first challenge should be easy. If you aren't sure what to do, try <em>inspecting</em> the page more closely, and the <em>console</em> might reveal the answer.";
-            this.tooltip = "The console, typically found in web browsers' developer tools, is a text-based interface where developers can view and interact with information about a web page, including error messages, logs, variable values, and run JavaScript commands for debugging and testing purposes. It's a powerful tool allowing developers to inspect, debug, and test their code efficiently during web development.";
+            this.tooltip = "This is meant to be a learning experience, so if you get stuck on a challenge, please try to google what you might do to solve it using the key words in the challenge. For example, you could try googling \"How do I inspect a web page?\"";
 
             // Update elements
             document.getElementById('title').innerText = this.title;
             document.getElementById('description').innerHTML = this.description;
+            document.getElementById('tool-tip').innerText = this.tooltip;
 
             // Setup challenge
             console.log("Surely they won't know that the password is", this.password);
@@ -86,14 +87,13 @@ const challenges = [
         onSubmit: () => {
             const userAnswer = document.getElementById('answer').value;
             if (userAnswer === this.password) {
-                // Update tooltip
-                document.getElementById('tool-tip').innerText = this.tooltip;
-
                 // Log completion
                 console.log(this.title + " solved!");
                 return true;
+            } else {
+                console.error("Incorrect password.")
+                return false;
             }
-            return false;
         }
     },
     {
@@ -101,24 +101,24 @@ const challenges = [
             // Initialize self
             this.password = generateRandomPassword();
             this.title = "Challenge 2";
-            this.description = "Ready for the second challenge? The answer for the next challenge might be nestled among the document's <em>elements</em>, it's like finding a needle in a haystack.";
-            this.tooltip = "Elements are individual parts of a webpage—HTML components—that can be selected, manipulated, and updated through JavaScript, allowing developers to dynamically change a page's content, structure, and style.";
+            this.description = "Ready for the second challenge? The answer for the next challenge is nestled among the document's <em>elements</em>, it's like finding a needle in a haystack.";
+            this.tooltip = "The console, typically found in web browsers' developer tools, is a text-based interface where developers can view and interact with information about a web page, including error messages, logs, and variable values.";
 
             // Update elements
             document.getElementById('title').innerHTML = this.title + "<p id=\"password\" style=\"display: none;\">" + this.password + "</p>";
             document.getElementById('description').innerHTML = this.description;
+            document.getElementById('tool-tip').innerText = this.tooltip;
         },
         onSubmit: () => {
             const userAnswer = document.getElementById('answer').value;
             if (userAnswer === this.password) {
-                // Update tool-tip
-                document.getElementById('tool-tip').innerText = this.tooltip;
-
                 // Log completion
                 console.log(this.title + " solved!");
                 return true;
+            } else {
+                console.error("Incorrect password.")
+                return false;
             }
-            return false;
         }
     },
     {
@@ -132,6 +132,7 @@ const challenges = [
             // Update elements
             document.getElementById('title').innerText = this.title;
             document.getElementById('description').innerHTML = this.description;
+            document.getElementById('tool-tip').innerText = this.tooltip;
 
             // Setup challenge
             document.getElementById('submit').disabled = true;
@@ -139,14 +140,13 @@ const challenges = [
         onSubmit: () => {
             const userAnswer = document.getElementById('answer').value;
             if (userAnswer === this.password) {
-                // Update tool-tip
-                document.getElementById('tool-tip').innerText = this.tooltip;
-
                 // Log completion
                 console.log(this.title + " solved!");
                 return true;
+            } else {
+                console.error("Incorrect password.")
+                return false;
             }
-            return false;
         }
     },
     {
@@ -154,12 +154,13 @@ const challenges = [
             // Initialize self
             this.password = generateRandomPassword();
             this.title = "Challenge 4";
-            this.description = "There is no need to make this complicated anymore. Here is the password: <em>" + this.password + "</em>";
-            this.tooltip = "Often, the console is used to log error messages and to give developers an insight as to what is going wrong.";
+            this.description = "In order to solve this challenge, you will need to combine everything you have learned up to this point. If it helps, here is the password: <em>" + this.password + "</em>";
+            this.tooltip = "Often, the console is used to log error messages and to give developers an insight as to what might be going wrong.";
 
             // Update elements
             document.getElementById('title').innerText = this.title;
             document.getElementById('description').innerHTML = this.description;
+            document.getElementById('tool-tip').innerText = this.tooltip;
 
             // Setup challenge
             document.getElementById('submit').style.backgroundColor = "#ff7b00";
@@ -168,25 +169,25 @@ const challenges = [
         onSubmit: () => {
             const userAnswer = document.getElementById('answer').value;
 
+            if (document.getElementById('submit').innerText != "Submit") {
+                console.error("Incorrect button text. Expected \"Submit\" but got \"" + document.getElementById('submit').innerText + "\" instead.");
+                document.getElementById('answer').value = '';
+                return false;
+            }
+
             if (document.getElementById('submit').style.backgroundColor != "rgb(0, 123, 255)") {
                 console.error("Incorrect button color. Expected \"rgb(0, 123, 255)\" but got \"" + document.getElementById('submit').style.backgroundColor + "\" instead.");
                 return false;
             }
 
-            if (document.getElementById('submit').innerText != "Submit") {
-                console.error("Incorrect button text. Expected \"Submit\" but got \"" + document.getElementById('submit').innerText + "\" instead.");
-                return false;
-            }
-
             if (userAnswer === this.password) {
-                // Update tool-tip
-                document.getElementById('tool-tip').innerText = this.tooltip;
-
                 // Log completion
                 console.log(this.title + " solved!");
                 return true;
+            } else {
+                console.error("Incorrect password.")
+                return false;
             }
-            return false;
         }
     },
     {
@@ -202,11 +203,14 @@ const challenges = [
             // Update elements
             document.getElementById('title').innerText = this.title;
             document.getElementById('description').innerHTML = this.description;
+            document.getElementById('tool-tip').innerText = '';
             document.getElementById('answer').style.display = 'none';
-            document.getElementById('submit').style.display = 'none';
+            document.getElementById('submit').innerText = "Reset Challenges";
         },
         onSubmit: () => {
-            return;
+            location.reload();
+            sessionStorage.setItem("progress", 0);
+            return false;
         }
     },
 ];
@@ -214,7 +218,8 @@ const challenges = [
 const totalChallenges = challenges.length - 1;
 document.getElementById('completed').innerText = "(0 out of " + totalChallenges + " complete)";
 
-let current = Number(getCookie("progress")) || 0;
+let current = sessionStorage.getItem("progress") || 0;
+current = current >= challenges.length ? 0 : current;
 let challenge = challenges[current];
 challenge.onStart();
 
@@ -223,13 +228,10 @@ function submitAnswer() {
         generateConfetti(); // Display confetti on correct answer
         current++;
         challenge = challenges[current];
-        setCookie("progress", current, 1);
+        sessionStorage.setItem("progress", current);
         challenge.onStart();
         document.getElementById('answer').value = '';
         document.getElementById('completed').innerText = "(" + current + " out of " + totalChallenges + " complete)";
-    } else {
-        alert("Unable to login. Try again!");
-        console.error("Unable to login. Challenge not solved.");
     }
 }
 
