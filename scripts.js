@@ -209,7 +209,7 @@ const challenges = [
         },
         onSubmit: () => {
             location.reload();
-            sessionStorage.setItem("progress", 0);
+            localStorage.setItem("progress", 0);
             return false;
         }
     },
@@ -218,7 +218,7 @@ const challenges = [
 const totalChallenges = challenges.length - 1;
 document.getElementById('completed').innerText = "(0 out of " + totalChallenges + " complete)";
 
-let current = sessionStorage.getItem("progress") || 0;
+let current = localStorage.getItem("progress") || 0;
 current = current >= challenges.length ? 0 : current;
 let challenge = challenges[current];
 challenge.onStart();
@@ -228,7 +228,7 @@ function submitAnswer() {
         generateConfetti(); // Display confetti on correct answer
         current++;
         challenge = challenges[current];
-        sessionStorage.setItem("progress", current);
+        localStorage.setItem("progress", current);
         challenge.onStart();
         document.getElementById('answer').value = '';
         document.getElementById('completed').innerText = "(" + current + " out of " + totalChallenges + " complete)";
