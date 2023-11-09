@@ -216,12 +216,13 @@ const challenges = [
 ];
 
 const totalChallenges = challenges.length - 1;
-document.getElementById('completed').innerText = "(0 out of " + totalChallenges + " complete)";
-
 let current = localStorage.getItem("progress") || 0;
 current = current >= challenges.length ? 0 : current;
+
 let challenge = challenges[current];
 challenge.onStart();
+
+document.getElementById('completed').innerText = "(" + current + " out of " + totalChallenges + " complete)";
 
 function submitAnswer() {
     if (challenge.onSubmit()) {
